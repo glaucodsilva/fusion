@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,12 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6c84000n*5423ov#u9h6f@&+%1ph4rxi(t1!83z+1u@(%2hh!6'
+# SECRET_KEY = '6c84000n*5423ov#u9h6f@&+%1ph4rxi(t1!83z+1u@(%2hh!6'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'geekhodl.com.br', 'www.geekhodl.com.br']
 
 
 # Application definition
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,23 +80,22 @@ WSGI_APPLICATION = 'fusion.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+DATABASES = {
+    'default' : dj_database_url.parse(os.environ.get('DATABASE_URL'),conn_max_age=600),
+}
+
 """
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'fusion',
-        'USER': 'geek',
-        'PASSWORD': 'university',
+        'USER': 'postgres',
+        'PASSWORD': '$z@xIoen#w)VUws0',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
 """
-
-
-DATABASES = {
-    'default': dj_database_url.config()
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -127,7 +127,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -139,17 +139,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Email teste console
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 """
 # Email produção
-
 EMAIL_HOST = 'localhost'
-EMAIL_HOST_USER = 'no-reply@fusion.com.br'
+EMAIL_HOST_USER = 'noreply@geekhodl.com.br'
 EMAIL_PORT = 587
 EMAIL_USE_TSL = True
-EMAIL_HOST_PASSWORD = 'fusion'
-DEFAULT_FROM_EMAIL = 'contato@fusion.com.br'
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = 'geekhodl_pass'
+DEFAULT_FROM_EMAIL = 'contato@geekhodl.com.br'
 """
 
 LOGOUT_REDIRECT_URL = 'index'
